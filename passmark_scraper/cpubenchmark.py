@@ -106,7 +106,7 @@ class cpubenchmark_scraper_single:
             _source = requests.get(url).text
         except requests.exceptions.RequestException as e: 
             logger.critical("Requests failed to reach %s, error: %s" % (url, e))
-            sys.exit(1)
+            raise e
         logger.info("Requests discovered the webpage successfully")
         return _source
 
@@ -117,7 +117,7 @@ class cpubenchmark_scraper_single:
             _soup = BeautifulSoup(source, features=features)
         except Exception as e:
             logger.critical("BS4 failed to create a BeautifulSoup instance, error: %s" % e)
-            sys.exit(1)
+            raise e
         logger.info("BS4 successfully created a BeautifulSoup instance")
         return _soup
 
@@ -127,7 +127,7 @@ class cpubenchmark_scraper_single:
         _table = self._soup.find('table', {'id': 'cputable'})
         if _table is None:
             logger.critical("BS4 was unable to find any table on this website by the id 'cputable'")
-            sys.exit(1)
+            raise Exception("BS4 failed to find any table on this website by the id 'cputable'")
         else:
             logger.info("BS4 successfully discovered a table by the id 'cputable'")
         return _table
@@ -141,7 +141,7 @@ class cpubenchmark_scraper_single:
             _header_cols_txt = [col.text for col in _header_cols]
         except AttributeError as e:
             logger.critical("BS4 was unable to find any headers on this table, error: %s" % e)
-            sys.exit(1)
+            raise e
         logger.info("BS4 successfully discovered headers on this table: %s" % _header_cols_txt)
         return _header_cols
 
@@ -155,7 +155,7 @@ class cpubenchmark_scraper_single:
                 AttributeError("AttributeError: 'NoneType' object has no attribute 'find_all'")
         except AttributeError as e:
             logger.critical("BS4 was unable to find any rows on this table, error: %s" % e)
-            sys.exit(1)
+            raise e
         logger.info("BS4 successfully discovered rows on this table")
         return _cpu_rows
 
@@ -168,7 +168,8 @@ class cpubenchmark_scraper_single:
         for idx, row in enumerate(raw_rows):
             _cols = row.find_all('td')
             if len(_cols) < 5:
-                    logger.warning("Not enough rows for CPU: %i" % idx)
+                    logger.warning("Not enough columns for CPU: %i" % idx)
+                    raise Exception("Not enough columns in table for extraction")
             else:
                 _id = row.get('id')
                 if _id is None:
@@ -201,7 +202,7 @@ class cpubenchmark_scraper_mega(cpubenchmark_scraper_single):
             _cpu_rows = grouper(_cpu_rows, 2)
         except AttributeError as e:
             logger.critical("BS4 was unable to find any rows on this table, error: %s" % e)
-            sys.exit(1)
+            raise e
         logger.info("BS4 successfully discovered rows on this table")
         return _cpu_rows
     
@@ -215,7 +216,8 @@ class cpubenchmark_scraper_mega(cpubenchmark_scraper_single):
             _cols = row[0].find_all('td')
             _temp_cpu = {}
             if len(_cols) < 11:
-                    logger.warning("Not enough rows for CPU: %i" % idx)
+                    logger.warning("Not enough columns for CPU: %i" % idx)
+                    raise Exception("Not enough columns in table for extraction")
             else:
                 _id = row[0].get('id')
                 if _id is None:
@@ -225,7 +227,8 @@ class cpubenchmark_scraper_mega(cpubenchmark_scraper_single):
                                          test_date=_cols[8].text, socket=_cols[9].text, category=_cols[10].text)
             _cols2 = row[1].find_all('div')
             if len(_cols2) < 5:
-                logger.warning("Not enough MEGA rows for CPU: %i" % idx)
+                logger.warning("Not enough MEGA columns for CPU: %i" % idx)
+                raise Exception("Not enough columns in table for extraction")
             else:
                 _temp_cpu.update({"clock_speed": _cols2[0].text.replace("Clock Speed: ", ""), 
                                 "turbo_speed": _cols2[1].text.replace("Turbo Speed: ", ""), 

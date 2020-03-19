@@ -95,7 +95,8 @@ class videocardbenchmark_scraper_single(cpubenchmark_scraper_single):
         for idx, row in enumerate(raw_rows):
             _cols = row.find_all('td')
             if len(_cols) < 5:
-                    logger.warning("Not enough rows for GPU: %i" % idx)
+                    logger.warning("Not enough columns for GPU: %i" % idx)
+                    raise Exception("Not enough columns in table for extraction")
             else:
                 _id = row.get('id')
                 if _id is None:
@@ -128,7 +129,8 @@ class videocardbenchmark_scraper_mega(cpubenchmark_scraper_mega):
             _cols = row[0].find_all('td')
             _temp_gpu = {}
             if len(_cols) < 9:
-                    logger.warning("Not enough rows for GPU: %i" % idx)
+                    logger.warning("Not enough columns for GPU: %i" % idx)
+                    raise Exception("Not enough columns in table for extraction")
             else:
                 _id = row[0].get('id')
                 if _id is None:
@@ -138,7 +140,8 @@ class videocardbenchmark_scraper_mega(cpubenchmark_scraper_mega):
                                         power_perf=_cols[6].text, test_date=_cols[7].text, category=_cols[8].text)
             _cols2 = row[1].find_all('div')
             if len(_cols2) < 6:
-                logger.warning("Not enough MEGA rows for CPU: %i" % idx)
+                logger.warning("Not enough MEGA columns for CPU: %i" % idx)
+                raise Exception("Not enough columns in table for extraction")
             else:
                 _temp_gpu.update({"bus_interface": _cols2[0].text.replace("Bus Interface: ", ""),
                                 "max_memory": _cols2[1].text.replace("Max Memory: ", ""), 
