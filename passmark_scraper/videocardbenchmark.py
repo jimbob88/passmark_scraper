@@ -127,7 +127,6 @@ class videocardbenchmark_scraper_mega(cpubenchmark_scraper_mega):
         for idx, row in enumerate(raw_rows):
             _cols = row[0].find_all('td')
             _temp_gpu = {}
-            print(len(_cols))
             if len(_cols) < 9:
                     logger.warning("Not enough rows for GPU: %i" % idx)
             else:
@@ -138,7 +137,6 @@ class videocardbenchmark_scraper_mega(cpubenchmark_scraper_mega):
                                         gpu_value=_cols[3].text, g2d_mark=_cols[4].text, tdp=_cols[5].text,
                                         power_perf=_cols[6].text, test_date=_cols[7].text, category=_cols[8].text)
             _cols2 = row[1].find_all('div')
-            print(len(_cols2))
             if len(_cols2) < 6:
                 logger.warning("Not enough MEGA rows for CPU: %i" % idx)
             else:
