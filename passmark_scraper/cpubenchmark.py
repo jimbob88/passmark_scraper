@@ -235,8 +235,8 @@ class cpubenchmark_scraper_single:
                     single_cpu(
                         id=_id,
                         name=_cols[0].text,
-                        mark=_cols[1].text,
-                        rank=_cols[2].text,
+                        mark=int(_cols[1].text.replace(',', '')),
+                        rank=int(_cols[2].text),
                         value=_cols[3].text,
                         price=_cols[4].text,
                     )
@@ -298,9 +298,9 @@ class cpubenchmark_scraper_mega(cpubenchmark_scraper_single):
                     id=_id,
                     cpu_name=_cols[0].text,
                     cpu_price=_cols[1].text,
-                    cpu_mark=_cols[2].text,
+                    cpu_mark=int(_cols[2].text.replace(',', '')),
                     cpu_value=_cols[3].text,
-                    thread_mark=_cols[4].text,
+                    thread_mark=int(_cols[4].text.replace(',', '')) if _cols[4].text != 'NA' else _cols[4],
                     thread_value=_cols[5].text,
                     tdp=_cols[6].text,
                     power_perf=_cols[7].text,
