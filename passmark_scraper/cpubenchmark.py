@@ -19,11 +19,11 @@ class single_cpu:
         self._url = None
         self._id = id
         self.id = id
-        self._name = name
-        self._mark = mark
-        self._rank = rank
-        self._value = value
-        self._price = price
+        self._cpu_name = name
+        self._cpu_mark = mark
+        self._cpu_rank = rank
+        self._cpu_value = value
+        self._cpu_price = price
 
     @property
     def id(self):
@@ -43,11 +43,11 @@ class single_cpu:
         return {
             "id": self._id,
             "url": self._url,
-            "name": self._name,
-            "mark": self._mark,
-            "rank": self._rank,
-            "value": self._value,
-            "price": self._price,
+            "name": self._cpu_name,
+            "mark": self._cpu_mark,
+            "rank": self._cpu_rank,
+            "value": self._cpu_value,
+            "price": self._cpu_price,
         }
 
 

@@ -13,7 +13,7 @@ def ex2csv_get_cpubenchmark_single():
         writer = csv.writer(f) # Create new csv writer instance
         writer.writerow(["CPU Name", "Passmark CPU Mark (higher is better)", "Rank (lower is better)", "CPU Value (higher is better)", "Price (USD)"]) # Write the headings for the csv
         for cpu in scraper._cpus: # Iterate over all of the cpu_single classes
-            writer.writerow([cpu._name, cpu._mark, cpu._rank, cpu._value, cpu._price]) # Write the row of the data
+            writer.writerow([cpu._cpu_name, cpu._cpu_mark, cpu._cpu_rank, cpu._cpu_value, cpu._cpu_price]) # Write the row of the data
 
 def ex2csv_get_cpubenchmark_mega():
     """
